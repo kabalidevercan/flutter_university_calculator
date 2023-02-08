@@ -22,6 +22,8 @@ class _OrtalamaHesaplaPageState extends State<OrtalamaHesaplaPage> {
   double secilenHarfDeger = 4;
   double secilenKrediDeger = 1;
   String girilenDersAdi = "";
+  final lessonName = TextEditingController();
+  bool onInput = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,15 +47,24 @@ class _OrtalamaHesaplaPageState extends State<OrtalamaHesaplaPage> {
             children: [
               Expanded(
                 flex: 2,
-                child: _buildForm(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _buildForm(),
+                ),
               ),
               Expanded(
                 flex: 1,
-                child: OrtalamaGoster(
-                    ortalama: DataHelper.ortalamaHesapla(),
-                    dersSayisi: DataHelper.tumEklenenDersler.length),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: OrtalamaGoster(
+                      ortalama: DataHelper.ortalamaHesapla(),
+                      dersSayisi: DataHelper.tumEklenenDersler.length),
+                ),
               ),
             ],
+          ),
+          const Divider(
+            thickness: 2,
           ),
           Expanded(
             child: DersListesi(
@@ -77,7 +88,7 @@ class _OrtalamaHesaplaPageState extends State<OrtalamaHesaplaPage> {
             padding: Sabitler.yatayPadding8,
             child: _buildTextFormBuild(),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Row(
@@ -107,7 +118,7 @@ class _OrtalamaHesaplaPageState extends State<OrtalamaHesaplaPage> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
         ],
@@ -117,10 +128,22 @@ class _OrtalamaHesaplaPageState extends State<OrtalamaHesaplaPage> {
 
   TextFormField _buildTextFormBuild() {
     return TextFormField(
+      controller: lessonName,
       onSaved: (deger) {
         setState(() {
           girilenDersAdi = deger!;
         });
+      },
+      onChanged: (deger) {
+        if (deger.isNotEmpty) {
+          setState(() {
+            onInput = true;
+          });
+        } else {
+          setState(() {
+            onInput = false;
+          });
+        }
       },
       validator: (s) {
         if (s!.length <= 0) {
@@ -130,6 +153,17 @@ class _OrtalamaHesaplaPageState extends State<OrtalamaHesaplaPage> {
         }
       },
       decoration: InputDecoration(
+        suffixIcon: onInput
+            ? IconButton(
+                onPressed: () {
+                  lessonName.clear();
+                  setState(() {
+                    girilenDersAdi = '';
+                    onInput = false;
+                  });
+                },
+                icon: Icon(Icons.close))
+            : null,
         hintText: "Ders giriniz",
         border: OutlineInputBorder(
           borderRadius: Sabitler.borderRadius,
@@ -149,7 +183,8 @@ class _OrtalamaHesaplaPageState extends State<OrtalamaHesaplaPage> {
           harfDegeri: secilenHarfDeger,
           krediDegeri: secilenKrediDeger);
       DataHelper.dersEkle(eklenecekDers);
-
+      lessonName.clear();
+      girilenDersAdi = '';
       setState(() {});
     }
   }

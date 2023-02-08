@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import '../constants/app_constants.dart';
 
 class OrtalamaGoster extends StatelessWidget {
@@ -24,7 +23,7 @@ class OrtalamaGoster extends StatelessWidget {
           ortalama >= 0 ? "${ortalama.toStringAsFixed(2)}" : "0.0",
           style: Sabitler.ortalamaStyle,
         ),
-        Text(
+        const Text(
           "Ortalama",
           style: Sabitler.OrtalamaGoster,
         ),
